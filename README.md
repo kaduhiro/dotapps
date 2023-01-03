@@ -20,8 +20,17 @@
 
 ## Installation
 
+### curl
+
 ```
-sh etc/install.sh
+sh -c "$(curl -fsLS https://raw.githubusercontent.com/kaduhiro/dotapps/main/etc/install.sh)"
+```
+
+### git
+
+```
+git clone https://github.com/kaduhiro/dotapps ~/.dotapps
+sh ~/.dotapps/etc/install.sh
 ```
 
 ## Author
