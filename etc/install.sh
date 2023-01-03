@@ -148,7 +148,7 @@ install () {
 		git clone https://github.com/kaduhiro/dotapps $location
 	fi
 
-	for repo in $(echo $REPOSITORIES | tr ',' '\n' | awk -F':' '{print $1;}'); do
+	for repo in $(echo $repositories | tr ',' '\n' | awk -F':' '{print $1;}'); do
 		local reponame=$(echo $repo | awk -F'/' '{printf "%s@%s", $2, $1;}')
 		local repopath=$location/home/$reponame
 		if [ ! -d $repopath ]; then
