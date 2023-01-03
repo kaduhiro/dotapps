@@ -87,9 +87,9 @@ deploy() {
 
 		echo "! scripts, $scriptroot"
 
-		for s in $(find $scriptroot -type f -name '*.sh' | awk -F'/' '{print NF, $0}' | sort -n | awk '{print $2}'); do
-			echo "$ script, $s"
-			env $(cat $ENVFILE | tr '\n' ' ') sh -eu $s
+		for script in $(find $scriptroot -type f -name '*.sh' | awk -F'/' '{print NF, $0}' | sort -n | awk '{print $2}'); do
+			echo "$ script, $script"
+			env $(cat $ENVFILE | tr '\n' ' ') sh -eu $script
 		done
 	done
 }
