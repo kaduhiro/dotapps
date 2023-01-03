@@ -2,7 +2,7 @@
 set -eu
 
 deploy() {
-	local ENVFILE=$(readlink -f $(dirname $(readlink -f $0))/../.env)
+	local ENVFILE=$(readlink -f $(dirname $0)/../.env)
 	if [ ! -e $ENVFILE ]; then
 		echo "! no environment file, $ENVFILE" && false
 	fi
