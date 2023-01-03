@@ -81,7 +81,16 @@ install () {
 	EOF
 
 	printf "? location ($LOCATION) " && read location
+	: ${location:=$LOCATION}
+
 	printf "? repositories ($REPOSITORIES) " && read repositories
+	repositories=$(printf "${repositories:-$REPOSITORIES}" | awk -F':' -v 'RS=,' '
+		{r = $1; e = $2;}
+		r !~ /\// {printf "'$(whoami)'/";}
+		{printf r;}
+		e != "" {printf ":%s",e;}
+		{printf "\n";}
+	' | paste -s -d, -)
 
 	cat <<- EOF
 	┏
@@ -91,8 +100,8 @@ install () {
 	┃ Architecture $OSARCH
 	┃ Shell        $OSSHELL
 	┃ 
-	┃ Location     ${location:=$LOCATION}
-	┃ Repositories ${repositories:=$REPOSITORIES}
+	┃ Location     $location
+	┃ Repositories $repositories
 	┗
 	EOF
 
