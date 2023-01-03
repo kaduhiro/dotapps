@@ -60,7 +60,7 @@ deploy() {
 			local targets=$(find $userhome -mindepth 1 -maxdepth 1 $IGNORES_OPTION | awk -F'/' '{print $NF}')
 			for t in $targets; do
 				echo "~ symbolic link $t -> $HOME/$t"
-				mv -f $HOME/$t $usertmp/$t
+				[ -e $HOME/$t ] && mv -f $HOME/$t $usertmp/$t
 				ln -fns $(readlink -f $userhome/$t) $HOME/$t
 			done
 
