@@ -12,11 +12,11 @@ install () {
 	local LOCATION=~/.dotapps
 	local REPOSITORIES=dotfiles
 
-	local ENVFILE=$(readlink -f $(dirname $0)/../.env)
-	if [ ! -e $ENVFILE ]; then
-		ENVFILE=$(readlink -f .env)
+	local ENVFILE=.env
+	if [ ! -e "$ENVFILE" ]; then
+		ENVFILE=$(dirname $0)/../.env
 	fi
-	if [ -e $ENVFILE ]; then
+	if [ -e "$ENVFILE" ]; then
 		eval $(cat $ENVFILE | awk -F'=' '$2 ~ /^[^# ]/ {print;}')
 	fi
 
