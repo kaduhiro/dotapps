@@ -77,7 +77,7 @@ deploy() {
 
 		local src="($(printf "$repo" | sed -E 's/\//\\\//g'))([^,]*)*(,|$)"
 		local dst="\\1:$(printf "$inputenvs" | sed -E 's/ /\\\//g')\\3"
-		sed -i -E "s/$src/$dst/" $ENVFILE 2> /dev/null || sed -i '' -E "s/$src/$dst/" $ENVFILE
+		cat $ENVFILE | sed -E "s/$src/$dst/" | tee $ENVFILE > /dev/null
 
 		local scriptroot=$repopath/.dotapps
 		if [ ! -e $scriptroot ]; then
