@@ -8,7 +8,7 @@ install () {
 	local OSDIST=
 	local OSVERSION=
 	local OSARCH=$(uname -m)
-	local OSSHELL=$(echo $SHELL | xargs basename)
+	local OSSHELL=
 	local LOCATION=~/.dotapps
 	local REPOSITORIES=dotfiles
 
@@ -79,6 +79,15 @@ install () {
 	  ░                                                             
 	
 	EOF
+
+	local usershell=$(echo $SHELL | xargs basename)
+	if [ "$usershell" != "$OSSHELL" ]; then
+		local yn=y
+		if [ -n "$OSSHELL" ]; then
+			printf "? use $usershell (y/N) " && read yn
+		fi
+		[ "$yn" = 'y' ] && OSSHELL=$usershell
+	fi
 
 	printf "? location ($LOCATION) " && read location
 	: ${location:=$LOCATION}
