@@ -115,12 +115,12 @@ install () {
 	EOF
 
 	if [ -z "$OSNAME" ] || [ -z "$OSVERSION" ] || [ -z "$OSARCH" ]; then
-		echo "! unsupported system, $(uname -a)" && false
+		echo "! unsupported system, $(uname -a)" && exit 1
 	fi
 
 	if ! type git > /dev/null || ! type make > /dev/null; then
 		printf '? git and make commands are required. install now [y/N] ' && read yn
-		[ "$yn" != 'y' ] && false
+		[ "$yn" != 'y' ] && exit 1
 
 		case "$OSNAME" in
 		macos)
@@ -141,17 +141,17 @@ install () {
 				sudo dnf install -y git make
 				;;
 			*)
-				echo "! unsupported system, $(uname -a)" && false
+				echo "! unsupported system, $(uname -a)" && exit 1
 			esac
 			;;
 		*)
-			echo "! unsupported system, $(uname -a)" && false
+			echo "! unsupported system, $(uname -a)" && exit 1
 			;;
 		esac
 	fi
 
-	printf '? start [y/N] ' && read yn
-	[ "$yn" != 'y' ] && false
+	printf '? start (y/N) ' && read yn
+	[ "$yn" != 'y' ] && exit 1
 
 	if [ ! -e $location ]; then
 		git clone https://github.com/kaduhiro/dotapps $location
@@ -173,7 +173,7 @@ install () {
 			done
 
 			if [ ! -d $repopath ]; then
-				echo "! no repository, $repo" && false
+				echo "! no repository, $repo" && exit 1
 			fi
 
 			umask 0002
