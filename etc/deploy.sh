@@ -45,6 +45,15 @@ deploy() {
 		inputenvs=$(echo ${inputenvs:-$env} | sed -e 's/[\/,]/ /g')
 
 		for inputenv in $inputenvs; do
+			case $inputenv in
+			bash|zsh)
+				echo "! change shell to $inputenv"
+				OSSHELL=$inputenv
+				;;
+			esac
+		done
+
+		for inputenv in $inputenvs; do
 			local userhome=$repopath/$inputenv
 			if [ ! -e $userhome ]; then
 				echo "! no environment, $userhome"
