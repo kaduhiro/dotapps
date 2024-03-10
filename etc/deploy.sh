@@ -15,7 +15,7 @@ deploy() {
 	local IGNORES='.git .DS_Store .dotapps'
 	local IGNORES_OPTION=$(echo "$IGNORES" | tr ' ' '\n' | awk '{printf " -not -name %s", $0;}')
 
-	local SECRETS='.ssh .ssh/id_rsa .ssh/authorized_keys .ssh/config'
+	local SECRETS='.ssh .ssh/config .ssh/authorized_keys .ssh/id_rsa .ssh/id_ed25519'
 
 	local DEFAULTENV="default/$OSNAME/$OSSHELL"
 
@@ -59,7 +59,6 @@ deploy() {
 				echo "! no environment, $userhome"
 				continue
 			fi
-
 
 			local usertmp=$TMPROOT/$reponame/$inputenv
 			rm -rf $usertmp
