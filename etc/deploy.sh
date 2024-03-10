@@ -45,22 +45,21 @@ deploy() {
 		inputenvs=$(echo ${inputenvs:-$env} | sed -e 's/[\/,]/ /g')
 
 		for inputenv in $inputenvs; do
+			echo "! environment, $inputenv"
+
 			case $inputenv in
 			bash|zsh)
 				echo "! change shell to $inputenv"
-				OSSHELL=$inputenv
+				sed -i -E "s/^(OSSHELL=).+$/\1$inputenv/g" $ENVFILE
 				;;
 			esac
-		done
-
-		for inputenv in $inputenvs; do
+	
 			local userhome=$repopath/$inputenv
 			if [ ! -e $userhome ]; then
 				echo "! no environment, $userhome"
 				continue
 			fi
 
-			echo "! environment, $inputenv"
 
 			local usertmp=$TMPROOT/$reponame/$inputenv
 			rm -rf $usertmp
