@@ -50,7 +50,7 @@ deploy() {
 			case $inputenv in
 			bash|zsh)
 				echo "! change shell to $inputenv"
-				sed -i -E "s/^(OSSHELL=).+$/\1$inputenv/g" $ENVFILE
+				cat $ENVFILE | sed -E "s/^(OSSHELL=).+$/\1$inputenv/g" | tee $ENVFILE > /dev/null
 				;;
 			esac
 	
