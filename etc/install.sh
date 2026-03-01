@@ -24,7 +24,7 @@ install () {
 	# macOS
 	Darwin)
 		OSNAME=macos
-		OSVERSION=$(sw_vers -productVersion)
+		OSVERSION=$(sw_vers -productVersion | cut -d '.' -f1)
 		;;
 	# Linux
 	Linux)
@@ -100,14 +100,14 @@ install () {
 
 	cat <<- EOF
 	┏
-	┃ OS           $OSNAME
-	┃ Distribution $OSDIST
-	┃ Version      $OSVERSION
-	┃ Architecture $OSARCH
-	┃ Shell        $OSSHELL
+	┃ OS           : $OSNAME
+	┃ Distribution : ${OSDIST:--}
+	┃ Version      : $OSVERSION
+	┃ Architecture : $OSARCH
+	┃ Shell        : $OSSHELL
 	┃ 
-	┃ Location     $location
-	┃ Repositories $repositories
+	┃ Location     : $location
+	┃ Repositories : $repositories
 	┗
 	EOF
 
