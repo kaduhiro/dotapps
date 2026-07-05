@@ -1,3 +1,5 @@
+.env
+
 /home/**
 !/home/.gitkeep
 /tmp/**
