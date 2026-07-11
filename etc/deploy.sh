@@ -24,6 +24,8 @@ deploy() {
 		local reponame=$(echo $repo | awk -F'/' '{printf "%s@%s", $2, $1;}')
 		local repopath=$LOCATION/home/$reponame
 
+		update_repository "$repo" "$repopath"
+
 		local env=$(echo $repoenv | awk -F':' '{print $2;}')
 
 		local environments=$(find $repopath -mindepth 1 -maxdepth 1 -type d $IGNORES_OPTION | awk -F'/' '{print $NF;}')
@@ -99,6 +101,24 @@ deploy() {
 		done
 		set -e
 	done
+}
+
+update_repository() {
+	local repo=$1
+	local repopath=$2
+
+	if [ ! -d "$repopath/.git" ]; then
+		echo "! no git repository, $repopath"
+		false
+	fi
+
+	echo "! update repository, $repo"
+
+	local branch
+	branch=$(git -C "$repopath" symbolic-ref --quiet --short HEAD)
+
+	git -C "$repopath" fetch --prune origin
+	git -C "$repopath" merge --ff-only "origin/$branch"
 }
 
 link_target() {
