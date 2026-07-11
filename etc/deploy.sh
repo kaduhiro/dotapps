@@ -12,7 +12,7 @@ deploy() {
 	local HOMEROOT=$LOCATION/home
 	local TMPROOT=$LOCATION/tmp
 
-	local IGNORES='.git .DS_Store .dotapps'
+	local IGNORES='.git .DS_Store .history .dotapps'
 	local IGNORES_OPTION=$(echo "$IGNORES" | tr ' ' '\n' | awk '{printf " -not -name %s", $0;}')
 
 	local SECRETS='.ssh .ssh/config .ssh/authorized_keys .ssh/id_rsa .ssh/id_ed25519'
@@ -66,9 +66,7 @@ deploy() {
 
 			local targets=$(find $userhome -mindepth 1 -maxdepth 1 $IGNORES_OPTION | awk -F'/' '{print $NF}')
 			for t in $targets; do
-				echo "~ symbolic link $t -> $HOME/$t"
-				[ -e $HOME/$t ] && mv -f $HOME/$t $usertmp/$t
-				ln -fns $(readlink -f $userhome/$t) $HOME/$t
+				link_target "$userhome/$t" "$HOME/$t" "$usertmp" "$IGNORES_OPTION" "$t"
 			done
 
 			for s in $SECRETS; do
@@ -101,6 +99,32 @@ deploy() {
 		done
 		set -e
 	done
+}
+
+link_target() {
+	local src=$1
+	local dst=$2
+	local tmproot=$3
+	local ignores_option=$4
+	local label=$5
+
+	if [ -d "$src" ] && [ -d "$dst" ] && [ ! -L "$dst" ]; then
+		echo "~ merge directory $label -> $dst"
+
+		local children=$(find "$src" -mindepth 1 -maxdepth 1 $ignores_option | awk -F'/' '{print $NF}')
+		for child in $children; do
+			link_target "$src/$child" "$dst/$child" "$tmproot" "$ignores_option" "$label/$child"
+		done
+
+		return
+	fi
+
+	echo "~ symbolic link $label -> $dst"
+	if [ -e "$dst" ] || [ -L "$dst" ]; then
+		mkdir -p "$tmproot/$(dirname "$label")"
+		mv -f "$dst" "$tmproot/$label"
+	fi
+	ln -fns "$(readlink -f "$src")" "$dst"
 }
 
 deploy $@
